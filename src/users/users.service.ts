@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { createHmac } from 'crypto';
 
 import { User } from './users.entity';
 
@@ -11,8 +12,38 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  addUser(name, surname, email, phone, password): Record<string, unknown> {
-    const status = this.usersRepository
+  encryptPassword(password): string {
+    const secret = 'salt';
+
+    return createHmac('sha256', secret).update(password).digest('hex');
+  }
+
+  async authUser(email, password): Promise<Record<string, unknown>> {
+    const result = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.email = :email AND user.password = :password', {
+        email: email,
+        password: password,
+      })
+      .getOne();
+
+    return {
+      status: Boolean(result),
+      email: result.email,
+      name: result.name,
+      surname: result.surname,
+      phone: result.phone,
+    };
+  }
+
+  async addUser(
+    name,
+    surname,
+    email,
+    phone,
+    password,
+  ): Promise<Record<string, unknown>> {
+    const status = await this.usersRepository
       .createQueryBuilder()
       .insert()
       .into(User)
