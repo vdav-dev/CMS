@@ -18,6 +18,45 @@ export class UsersService {
     return createHmac('sha256', secret).update(password).digest('hex');
   }
 
+  async updateUser(
+    id,
+    name,
+    surname,
+    email,
+    phone,
+    password,
+  ): Promise<Record<string, unknown>> {
+    const result = await this.usersRepository
+      .createQueryBuilder()
+      .update(User)
+      .set({
+        name: name,
+        surname: surname,
+        email: email,
+        phone: phone,
+        password: password,
+      })
+      .where('id = :id', { id: id })
+      .execute();
+
+    return {
+      status: Boolean(result),
+    };
+  }
+
+  async deleteUser(id): Promise<Record<string, unknown>> {
+    const result = await this.usersRepository
+      .createQueryBuilder()
+      .delete()
+      .from(User)
+      .where('id = :id', { id: id })
+      .execute();
+
+    return {
+      status: Boolean(result),
+    };
+  }
+
   async authUser(email, password): Promise<Record<string, unknown>> {
     const result = await this.usersRepository
       .createQueryBuilder('user')
@@ -29,6 +68,7 @@ export class UsersService {
 
     return {
       status: Boolean(result),
+      id: result.id,
       email: result.email,
       name: result.name,
       surname: result.surname,
@@ -43,7 +83,7 @@ export class UsersService {
     phone,
     password,
   ): Promise<Record<string, unknown>> {
-    const status = await this.usersRepository
+    const result = await this.usersRepository
       .createQueryBuilder()
       .insert()
       .into(User)
@@ -59,7 +99,7 @@ export class UsersService {
       .execute();
 
     return {
-      status: Boolean(status),
+      status: Boolean(result),
     };
   }
 }
