@@ -15,6 +15,7 @@ export class ProductsService {
     name,
     description,
     price,
+    category
   ): Promise<Record<string, unknown>> {
     const result = await this.usersRepository
       .createQueryBuilder()
@@ -25,6 +26,7 @@ export class ProductsService {
           name: name,
           description: description,
           price: price,
+          category: category,
         },
       ])
       .execute();
@@ -34,10 +36,19 @@ export class ProductsService {
     };
   }
 
-  async getProducts(): Promise<Record<string, unknown>> {
-    const result = await this.usersRepository
-      .createQueryBuilder('products')
-      .getMany();
+  async getProducts(category): Promise<Record<string, unknown>> {
+    let result;
+
+    if (!category) {
+      result = await this.usersRepository
+        .createQueryBuilder('products')
+        .getMany();
+    } else {
+      result = await this.usersRepository
+        .createQueryBuilder('products')
+        .where('products.category = :category', { category: category })
+        .getMany();
+    }
 
     return {
       status: Boolean(result),
