@@ -15,11 +15,17 @@ export class ProductsController {
     const name = query.name;
     const description = query.description;
     const price = query.price;
+    const category = query.category;
     const requestToken = query.token;
     const insideToken = config.token;
 
     if (requestToken == insideToken) {
-      return this.productsService.addProducts(name, description, price);
+      return this.productsService.addProducts(
+        name,
+        description,
+        price,
+        category,
+      );
     } else {
       return {
         status: false,
@@ -29,8 +35,10 @@ export class ProductsController {
   }
 
   @Post('/api/getProducts')
-  getProducts(): Promise<Record<string, unknown>> {
-    return this.productsService.getProducts();
+  getProducts(@Query() query): Promise<Record<string, unknown>> {
+    const category = query.category;
+
+    return this.productsService.getProducts(category);
   }
 
   @Post('/api/getProductById')
