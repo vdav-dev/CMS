@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/authorization.css">
+</head>
+
+<body id="vue-app">
+  <form class="registration">
+    <div>
+      <h1>Регистрация</h1>
+      <p>Заполните поля ниже, чтобы зарегистрироваться.</p>
+      <hr>
+
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Ваш e-mail" name="email" required>
+
+      <label for="password"><b>Password</b></label>
+      <input type="password" placeholder="Ваш пароль" name="password" required>
+
+      <label for="password-repeat"><b>Повторите пароль</b></label>
+      <input type="password" placeholder="Repeat Password" name="password-repeat" required>
+      <hr>
+
+      <p>Регистрируясь, вы принимаете <a href="#">политику конфиденциальности</a>.</p>
+      <button type="submit" class="register-button" id="register-button" v-on:click="sendPost(`url`)">Зарегистрироваться</button>
+    </div>
+    <div class="container signin">
+      <p>Есть аккаунт? <a href="#">Войдите</a>.</p>
+    </div>
+  </form>
+
+
+
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="js/send_post.vue.js"></script>
+  <script src="js/fetch_json.vue.js"></script>
+
+</body>
+
+</html>
