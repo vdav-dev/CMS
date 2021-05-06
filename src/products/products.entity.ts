@@ -13,7 +13,4 @@ export class Product {
 
   @Column()
   price: number;
-
-  @Column({ default: false })
-  commited: boolean;
 }
