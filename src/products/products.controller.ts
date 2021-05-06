@@ -27,4 +27,55 @@ export class ProductsController {
       };
     }
   }
+
+  @Post('/api/getProducts')
+  getProducts(): Promise<Record<string, unknown>> {
+    return this.productsService.getProducts();
+  }
+
+  @Post('/api/getProductById')
+  getProduct(@Query() query): Promise<Record<string, unknown>> {
+    const id = query.id;
+
+    return this.productsService.getProductById(id);
+  }
+
+  @Post('/api/deleteProduct')
+  delProduct(
+    @Query() query,
+  ): Promise<Record<string, unknown>> | Record<string, unknown> {
+    const id = query.id;
+    const requestToken = query.token;
+    const insideToken = config.token;
+
+    if (requestToken == insideToken) {
+      return this.productsService.deleteProduct(id);
+    } else {
+      return {
+        status: false,
+        msg: 'invalid token',
+      };
+    }
+  }
+
+  @Post('/api/updateProduct')
+  updateProduct(
+    @Query() query,
+  ): Promise<Record<string, unknown>> | Record<string, unknown> {
+    const id = query.id;
+    const name = query.name;
+    const description = query.description;
+    const price = query.price;
+    const requestToken = query.token;
+    const insideToken = config.token;
+
+    if (requestToken == insideToken) {
+      return this.productsService.updateProduct(id, name, description, price);
+    } else {
+      return {
+        status: false,
+        msg: 'invalid token',
+      };
+    }
+  }
 }
