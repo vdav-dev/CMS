@@ -10,4 +10,27 @@ export class ProductsService {
     @InjectRepository(Product)
     private usersRepository: Repository<Product>,
   ) {}
+
+  async addProducts(
+    name,
+    description,
+    price,
+  ): Promise<Record<string, unknown>> {
+    const result = await this.usersRepository
+      .createQueryBuilder()
+      .insert()
+      .into(Product)
+      .values([
+        {
+          name: name,
+          description: description,
+          price: price,
+        },
+      ])
+      .execute();
+
+    return {
+      status: Boolean(result),
+    };
+  }
 }
